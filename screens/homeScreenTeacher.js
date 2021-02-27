@@ -23,6 +23,11 @@ export default function homeScreen({navigation}) {
         onPress={() => navigation.navigate('studentScore')}
       />
       <FilledButton
+        title={'Chat'}
+        style={styles.loginButton}
+        onPress={() => navigation.navigate('Chat')}
+      />
+      <FilledButton
         title={'Logout'}
         style={styles.loginButton}
         onPress={() => logout()}
