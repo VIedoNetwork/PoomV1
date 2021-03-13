@@ -4,9 +4,9 @@ import {View, StyleSheet, Text, Alert } from 'react-native';
 import {FilledButton} from '../components/FilledButton';
 import { AuthContext } from '../navigaiton/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
-import { Input, ListItem, Button } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
-
+import { Input, ListItem, Button, Image } from 'react-native-elements';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 class chat extends React.Component {
 
@@ -21,7 +21,6 @@ class chat extends React.Component {
             textArr: []
         };
 
-
     }
 
     inputValueUpdate = (val, prop) => {
@@ -31,7 +30,7 @@ class chat extends React.Component {
     }
 
     componentDidMount() {
-        this.unsubscribe = this.fireStoreData.onSnapshot(this.getCollection);
+        this.unsubscribe = this.fireStoreData .orderBy("timestamp", "asc").onSnapshot(this.getCollection);
     }
 
     componentWillUnmount(){
@@ -53,7 +52,8 @@ class chat extends React.Component {
 
   storeUser() { 
     this.usersCollectionRef.add({
-            chat: this.state.chat
+            chat: this.state.chat,
+            timestamp: firestore.FieldValue.serverTimestamp()
           }).then((res) => {
               this.setState({
                 chat: ''
@@ -68,43 +68,62 @@ class chat extends React.Component {
       }
 
   render() {
+
     return (
         <ScrollView>
-          <View style={styles.container}>
-            <Input
-                placeholder="Aa"
-                leftIcon={{ type: 'font-awesome', name: 'book' }}
-                style={styles}
-                value={this.state.chat}
-                onChangeText = {(val) => this.inputValueUpdate(val, 'chat')}
-            />
-          
-            <FilledButton 
-                title='ENTER'
-                style={styles.loginButton} 
-                onPress={() => {
-                  this.storeUser()}
+
+            <ScrollView style={stylesTest.massage}>
+                <View>
+                {
+                    this.state.textArr.map((item, i) => {
+                        return (
+
+                            <View>
+
+                                <Text style={stylesTest.namechat}>
+                                    Admin
+                                </Text>
+
+                                <ListItem key={i} bottomDivider>
+
+                                    <ListItem.Content>
+                                    <Text>
+                                        {item.chat}
+                                    </Text>
+                                    </ListItem.Content>
+
+                                </ListItem>
+
+                            </View>
+                        );
+                    })
                 }
-               
-            />
+                </View>   
+            </ScrollView>
             
-          </View>
-          <View>
-              {
-                this.state.textArr.map((item, i) => {
-                    return (
-                        <ListItem key={i} bottomDivider>
+            <View style={stylesTest.container}>
+                <View style={stylesTest.mainContainer}>
+                    <TextInput 
+                        placeholder="Aa"
+                        style={styles.textInput} 
+                        multiline
+                        value={this.state.chat}
+                        onChangeText = {(val) => this.inputValueUpdate(val, 'chat')}
+                    />
+                </View>
+                <View style={stylesTest.buttonContainer}>
+                    <Image 
+                        source={{ uri: 'https://cdn.pixabay.com/photo/2018/02/04/01/54/paper-planes-3128885_1280.png' }}
+                        style={{ width: 50, height: 50 }}
+                        onPress={() => {
+                            this.storeUser()}
+                        }
+                    />
+                </View>
+            </View>
 
-                            <ListItem.Content>
-                            <Text>{item.chat}</Text>
-                            </ListItem.Content>
-
-                        </ListItem>
-                    );
-                })
-            }
-          </View>
         </ScrollView>
+        
 
     );
   }
@@ -116,10 +135,12 @@ const styles = StyleSheet.create({
       marginBottom: 20,
       textAlign: 'center',
     },
+
     input: {
       marginVertical: 10,
       marginBottom: 15,
     },
+
     loginButton: {
       marginVertical: 32,
     },
@@ -129,9 +150,51 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       padding: 20,
-      marginBottom: 100
-
     }
+});
+
+const stylesTest = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        margin: 10,
+        alignItems: 'center',
+    },
+
+    mainContainer: {
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 25,
+        marginRight: 10,
+        flex: 1,
+        alignItems: 'center',
+    },
+
+    textInput: {
+        flex: 1,
+        marginHorizontal: 10,
+    },
+
+    buttonContainer: {
+        backgroundColor: Colors.light.tint,
+        borderRadius: 50,
+        width: 50,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    massage: {
+        width: 395,
+        height: 673,
+    },
+
+    namechat: {
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 6,
+    },
+
 });
 
 export default chat;
