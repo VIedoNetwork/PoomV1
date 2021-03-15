@@ -11,6 +11,7 @@ export default function homeScreen({navigation}) {
 
   return (
     <View style={styles.container}>
+<<<<<<< HEAD
       <Text style={styles.welcome}> Welcome Teacher </Text>
       <Text style={styles.head}>"{user.email}"</Text>
 
@@ -31,6 +32,29 @@ export default function homeScreen({navigation}) {
         Logout
         </Text>
       </TouchableOpacity>
+=======
+      <Text>Welcome Teacher {user.email}</Text>
+      <FilledButton
+        title={'Create Exam'}
+        style={styles.loginButton}
+        onPress={() => navigation.navigate('MakeSubject')}
+      />
+      <FilledButton
+        title={'Student Score'}
+        style={styles.loginButton}
+        onPress={() => navigation.navigate('studentScore')}
+      />
+      <FilledButton
+        title={'Chat'}
+        style={styles.loginButton}
+        onPress={() => navigation.navigate('Chat')}
+      />
+      <FilledButton
+        title={'Logout'}
+        style={styles.loginButton}
+        onPress={() => logout()}
+      />
+>>>>>>> b8bf11f990f9bef76d130241a6cc3160f9a73acd
     </View>
   );
 }
